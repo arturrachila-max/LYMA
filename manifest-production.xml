@@ -1,0 +1,151 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<OfficeApp 
+  xmlns="http://schemas.microsoft.com/office/appforoffice/1.1" 
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+  xmlns:bt="http://schemas.microsoft.com/office/officeappbasictypes/1.0" 
+  xmlns:mailappor="http://schemas.microsoft.com/office/mailappversionoverrides/1.0" 
+  xsi:type="MailApp">
+  
+  <!-- Basic Add-in Information -->
+  <Id>909777b1-52a6-45c2-b23a-9aa7e7621662</Id>
+  <Version>1.0.0.0</Version>
+  <ProviderName>LYMA</ProviderName>
+  <DefaultLocale>en-US</DefaultLocale>
+  
+  <!-- Display Names and Descriptions -->
+  <DisplayName DefaultValue="LYMA Salesforce Task Creator"/>
+  <Description DefaultValue="AI-powered Salesforce task creation from emails via n8n webhooks"/>
+  
+  <!-- Icons (displayed in Outlook UI) -->
+  <IconUrl DefaultValue="https://lyma-hunters-projects-6c9d1d24.vercel.app/assets/icon-64.png"/>
+  <HighResolutionIconUrl DefaultValue="https://lyma-hunters-projects-6c9d1d24.vercel.app/assets/icon-128.png"/>
+  
+  <!-- Support URL -->
+  <SupportUrl DefaultValue="https://lyma-hunters-projects-6c9d1d24.vercel.app"/>
+  
+  <!-- App Domains -->
+  <AppDomains>
+    <AppDomain>https://lyma-hunters-projects-6c9d1d24.vercel.app</AppDomain>
+    <AppDomain>https://gradhun.app.n8n.cloud</AppDomain>
+  </AppDomains>
+  
+  <!-- Hosts: This add-in works with Outlook Mailbox -->
+  <Hosts>
+    <Host Name="Mailbox"/>
+  </Hosts>
+  
+  <!-- Requirements: Minimum Mailbox API version -->
+  <Requirements>
+    <Sets>
+      <Set Name="Mailbox" MinVersion="1.5"/>
+    </Sets>
+  </Requirements>
+  
+  <!-- Form Settings: Define when the add-in appears -->
+  <FormSettings>
+    <Form xsi:type="ItemRead">
+      <DesktopSettings>
+        <!-- Source location for the task pane -->
+        <SourceLocation DefaultValue="https://lyma-hunters-projects-6c9d1d24.vercel.app/taskpane.html"/>
+        <!-- Requested height is required by XML schema -->
+        <RequestedHeight>450</RequestedHeight>
+      </DesktopSettings>
+    </Form>
+  </FormSettings>
+  
+  <!-- Permissions: ReadItem is sufficient for reading email content -->
+  <Permissions>ReadItem</Permissions>
+  
+  <!-- Rule: Show this add-in when reading a message -->
+  <Rule xsi:type="RuleCollection" Mode="Or">
+    <Rule xsi:type="ItemIs" ItemType="Message" FormType="Read"/>
+  </Rule>
+  
+  <DisableEntityHighlighting>false</DisableEntityHighlighting>
+  
+  <!-- VERSION OVERRIDES - Modern UI commands and ribbon integration -->
+  <VersionOverrides 
+    xmlns="http://schemas.microsoft.com/office/mailappversionoverrides" 
+    xsi:type="VersionOverridesV1_0">
+    
+    <Requirements>
+      <bt:Sets DefaultMinVersion="1.5">
+        <bt:Set Name="Mailbox"/>
+      </bt:Sets>
+    </Requirements>
+    
+    <Hosts>
+      <Host xsi:type="MailHost">
+        
+        <!-- DESKTOP FORM FACTOR -->
+        <DesktopFormFactor>
+          
+          <!-- Function File (required) -->
+          <FunctionFile resid="Commands.Url"/>
+          
+          <!-- Extension Point: Message Read Command Surface -->
+          <ExtensionPoint xsi:type="MessageReadCommandSurface">
+            
+            <!-- Add button to the default ribbon tab -->
+            <OfficeTab id="TabDefault">
+              <Group id="msgReadGroup">
+                <Label resid="GroupLabel"/>
+                
+                <!-- MAIN BUTTON: Opens the task pane -->
+                <Control xsi:type="Button" id="msgReadOpenPaneButton">
+                  <Label resid="TaskpaneButton.Label"/>
+                  <Supertip>
+                    <Title resid="TaskpaneButton.Label"/>
+                    <Description resid="TaskpaneButton.Tooltip"/>
+                  </Supertip>
+                  <Icon>
+                    <bt:Image size="16" resid="Icon.16x16"/>
+                    <bt:Image size="32" resid="Icon.32x32"/>
+                    <bt:Image size="80" resid="Icon.80x80"/>
+                  </Icon>
+                  <Action xsi:type="ShowTaskpane">
+                    <SourceLocation resid="Taskpane.Url"/>
+                  </Action>
+                </Control>
+                
+              </Group>
+            </OfficeTab>
+            
+          </ExtensionPoint>
+        </DesktopFormFactor>
+        
+      </Host>
+    </Hosts>
+    
+    <!-- RESOURCES -->
+    <Resources>
+      
+      <!-- Images -->
+      <bt:Images>
+        <bt:Image id="Icon.16x16" DefaultValue="https://lyma-hunters-projects-6c9d1d24.vercel.app/assets/icon-16.png"/>
+        <bt:Image id="Icon.32x32" DefaultValue="https://lyma-hunters-projects-6c9d1d24.vercel.app/assets/icon-32.png"/>
+        <bt:Image id="Icon.80x80" DefaultValue="https://lyma-hunters-projects-6c9d1d24.vercel.app/assets/icon-80.png"/>
+      </bt:Images>
+      
+      <!-- URLs -->
+      <bt:Urls>
+        <bt:Url id="Commands.Url" DefaultValue="https://lyma-hunters-projects-6c9d1d24.vercel.app/commands.html"/>
+        <bt:Url id="Taskpane.Url" DefaultValue="https://lyma-hunters-projects-6c9d1d24.vercel.app/taskpane.html"/>
+      </bt:Urls>
+      
+      <!-- Short Strings (max 125 characters) -->
+      <bt:ShortStrings>
+        <bt:String id="GroupLabel" DefaultValue="LYMA Salesforce"/>
+        <bt:String id="TaskpaneButton.Label" DefaultValue="Create SF Task"/>
+      </bt:ShortStrings>
+      
+      <!-- Long Strings (max 250 characters) -->
+      <bt:LongStrings>
+        <bt:String id="TaskpaneButton.Tooltip" DefaultValue="Generate and create Salesforce tasks from this email using AI"/>
+      </bt:LongStrings>
+      
+    </Resources>
+  </VersionOverrides>
+  
+</OfficeApp>
+
